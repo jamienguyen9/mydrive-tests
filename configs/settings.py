@@ -22,6 +22,10 @@ class TestConfig:
         # Test Environment Browser configuration
         self.base_url = os.getenv('BASE_URL', 'http://localhost:3000')
         self.headless = os.getenv('HEADLESS', 'false').lower() == 'true'
+        self.browser = os.getenv('BROWSER', 'chromium')
+        self.slow_mo = int(os.getenv('SLOW_MO', 0))
+        self.viewport_width = int(os.getenv('VIEWPORT_WIDTH', '1920'))
+        self.viewport_height = int(os.getenv('VIEWPORT_HEIGHT', '1080'))
         self.default_timeout = int(os.getenv('DEFAULT_TIMEOUT', '30000'))
         self.screenshot_on_failure = os.getenv('SCREENSHOT_ON_FAILURE', 'true').lower == 'true'
 
@@ -41,3 +45,49 @@ class TestConfig:
             'wait_until': 'networkidle',
             'timeout': self.default_timeout
         }
+
+    def get_browser_launch_options(self) -> Dict[str, Any]:
+        """
+        Get browser launch options for Playwright
+        
+        :returns: Dict contining browser launch configuration
+        """
+        options = {
+            'headless': self.headless,
+            'slow_mo': self.slow_mo,
+            'args': [
+                '--disable-blink-features=AutomationControlled',
+                '--disable-dev-shm-usage',
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-gpu',
+                '--window-size={},{}'.format(self.viewport_width, self.viewport_height)
+            ]
+        }
+        return options
+
+
+    def get_browser_context_options(self) -> Dict[str, Any]:
+        """
+        Get Broswer context options for Playwright
+
+        :returns: Dict containing browser context configuration
+        """
+        return {
+            'viewport': {
+                'width': 100,
+                'height': 100
+            },
+            'ignore_http_errors': True,
+            'accept_downloads': True,
+            'locale': 'en-US',
+            'timezone_id': 'America/New_York',
+            'permissions': ['geolocation', 'notification'],
+            'color_scheme': 'light',
+            'reduced_motion': 'reduce',
+            'forced_colors': 'none'
+        }
+
+    
+
+config = TestConfig()
