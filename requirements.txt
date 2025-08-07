@@ -1,0 +1,5 @@
+# Python 3.13.5 compatible dependencies
+playwright==1.54.0
+pytest==8.4.1
+pytest-playwright==0.7.0
+requests 2.32.3
