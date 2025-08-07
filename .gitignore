@@ -215,3 +215,11 @@ pytestdebug.log
 # playwright
 playwright-report
 playwright.env
+
+# test reports
+reports/
+screenshots/
+test-results/
+test_data/
+temp/
+ 

@@ -7,6 +7,7 @@ environment variables and provides a centralized configuration object
 import os
 from pathlib import Path
 from typing import Dict, Any, Optional
+from dotenv import load_dotenv
 
 load_dotenv('.env.test')
 
@@ -34,6 +35,10 @@ class TestConfig:
         self.test_user_password = os.getenv('TEST_USER_PASSWORD', 'TestPassword123!')
         self.test_admin_email = os.getenv('TEST_ADMIN_EMAIL', 'admin@example.com')
         self.test_admin_password = os.getenv('TEST_ADMIN_PASSWORD', "AdminPassword123!")
+
+        # End Test Paths
+        self.reports_dir = Path('reports')
+        self.logs_dir = self.reports_dir / 'logs'
 
     def get_page_goto_options(self) -> Dict[str, Any]:
         """
@@ -88,6 +93,5 @@ class TestConfig:
             'forced_colors': 'none'
         }
 
-    
 
 config = TestConfig()

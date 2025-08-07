@@ -4,8 +4,9 @@ Provides common functionality for page interactions, element waiting, and error 
 """
 
 import logging
+from typing import Optional, List, Dict, Any, Union
 from playwright.sync_api import Page, Locator, expect, TimeoutError as PlaywrightTimeoutError
-from config.settings import config
+from configs.settings import config
 from dotenv import load_dotenv
 
 class BasePage:
@@ -18,7 +19,7 @@ class BasePage:
         self.page = page
         self.timeout = config.default_timeout
 
-    def navigate_to(self, utl: Optional[str] = None) -> None:
+    def navigate_to(self, url: Optional[str] = None) -> None:
         """
         Navigate to a specific UTL or the base URL
 
@@ -108,5 +109,3 @@ class BasePage:
         """Wait for network to be idle"""
         timeout = timeout or self.timeout
         self.page.wait_for_load_state('networkidle', timeout=timeout)
-
-config = TestConfig()

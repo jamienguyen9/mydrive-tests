@@ -1,9 +1,17 @@
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).parent.parent
+sys.path.insert(0,str(project_root))
+
 import pytest
 import logging
 from typing import Generator, Dict, Any
 from configs.settings import config
 from playwright.sync_api import Playwright, Page, Browser, BrowserContext, sync_playwright
+from utils.logger import setup_logger
 
+logger = setup_logger(__name__)
 
 @pytest.fixture(scope="session")
 def playwright_instance() -> Generator[Playwright, None, None]:
