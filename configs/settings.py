@@ -71,7 +71,6 @@ class TestConfig:
         }
         return options
 
-
     def get_browser_context_options(self) -> Dict[str, Any]:
         """
         Get Broswer context options for Playwright
@@ -80,17 +79,13 @@ class TestConfig:
         """
         return {
             'viewport': {
-                'width': 100,
-                'height': 100
+                'width': self.viewport_width,
+                'height': self.viewport_height
             },
-            'ignore_http_errors': True,
+            'ignore_https_errors': True,
             'accept_downloads': True,
             'locale': 'en-US',
-            'timezone_id': 'America/New_York',
-            'permissions': ['geolocation', 'notification'],
-            'color_scheme': 'light',
-            'reduced_motion': 'reduce',
-            'forced_colors': 'none'
+            'timezone_id': 'America/New_York'
         }
 
 

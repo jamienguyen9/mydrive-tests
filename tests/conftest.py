@@ -39,10 +39,22 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
     """
     Create a browser context for each test function
     """
-    context = browser.new_context(**config.get_browser_context_options())
+    context_options = config.get_browser_context_options()
+
+    # Workaround for fixing permission name issues
+    if 'permissions' in context_options:
+        valid_permissions = []
+        for perm in context_options['permissions']:
+            if perm == 'notification':
+                valid_permissions.append('notifications')
+            elif perm in ['geolocation', 'notifications', 'camera', 'microphone', 'clipboard-read', 'clipboard-write']:
+                valid_permissions.append(perm)
+        context_options['permissions'] = valid_permissions
+
+    context = browser.new_context(**context_options)
 
     # Setup request/response logging
-    context.on("request", lambda request: logger.debug(f"Request: {request.method} {request.utl}"))
+    context.on("request", lambda request: logger.debug(f"Request: {request.method} {request.url}"))
     context.on("response", lambda response: logger.debug(f"Response: {response.status} {response.url}"))
 
     # context.tracing.start(screenshots=True, snapshots=True, sources=True)

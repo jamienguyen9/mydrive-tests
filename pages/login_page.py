@@ -3,6 +3,7 @@ This module contains the page object for the myDrive login page
 Handles all login-related interactions and validations
 """
 
+from configs.settings import config 
 from playwright.sync_api import Page
 from pages.base_page import BasePage
 import logging
@@ -13,17 +14,16 @@ class LoginPage(BasePage):
     """ Page object for the myDrive login page"""
 
     # Locators
-    EMAIL_INPUT = 'input[type="email"], input[name="email"], #email'
-    PASSWORD_INPUT = 'input[type="password"], input[name="password], #password'
-    LOGIN_BUTTON = 'button[type="submit"], button:has-text("Login"), button:has-text("Sign In")'
-    REMEMBER_ME_CHECKBOX = 'input[type="checkbox"][name="remember"]'
+    EMAIL_INPUT = 'input[type="text"], input[name="Email address"], #email'
+    PASSWORD_INPUT = 'input[type="password"], input[name="Password"], #password'
+    LOGIN_BUTTON = 'button[type="submit"]'
     ERROR_MESSAGE = '.error-message, .alert-danger, [role="alert"]'
 
     def __init__(self, page: Page):
         super().__init__(page)
-        self.page_url = f"{self.page.context.browser.base_url}/login"
+        self.page_url = f"{config.base_url}/login"
 
-    def login(self, email: str, password: str, remember_me: bool = False) -> None:
+    def login(self, email: str, password: str) -> None:
         """
         Perform login with provided credientials
 
@@ -37,9 +37,8 @@ class LoginPage(BasePage):
         self.fill_input(self.EMAIL_INPUT, email)
         self.fill_input(self.PASSWORD_INPUT, password)
 
-        # Check remember me if requested
-        if remember_me:
-            self.click_element(self.REMEMBER_ME_CHECKBOX)
+        get_button = self.page.get_by_role("button").all_text_contents()
+        logger.debug(f"FINDING BUTTON: {get_button}")
 
         # Click Login button
         self.click_element(self.LOGIN_BUTTON)

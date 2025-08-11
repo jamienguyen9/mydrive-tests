@@ -9,6 +9,8 @@ from playwright.sync_api import Page, Locator, expect, TimeoutError as Playwrigh
 from configs.settings import config
 from dotenv import load_dotenv
 
+logger = logging.getLogger(__name__)
+
 class BasePage:
     """
     Base class for all page objects
@@ -21,7 +23,7 @@ class BasePage:
 
     def navigate_to(self, url: Optional[str] = None) -> None:
         """
-        Navigate to a specific UTL or the base URL
+        Navigate to a specific URL or the base URL
 
         :param url: Optional URL to navigate to. Uses base_url if not provided 
         """
@@ -74,7 +76,7 @@ class BasePage:
         :clear_first: Whether to clear the field before entering first
         """
         element = self.wait_for_element(selector)
-        logger.debug(f"Filling input {selector} with text: {text[:20]}...")
+        logger.debug(f"Filling input '{selector}' with text: {text[:20]}...")
 
         if clear_first:
             element.clear()
