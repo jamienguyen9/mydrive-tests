@@ -16,7 +16,7 @@ class LoginPage(BasePage):
     # Locators
     EMAIL_INPUT = 'input[type="text"], input[name="Email address"], #email'
     PASSWORD_INPUT = 'input[type="password"], input[name="Password"], #password'
-    LOGIN_BUTTON = 'button[type="submit"]'
+    LOGIN_BUTTON = 'input[type="submit"], input[value="Login"]'
     ERROR_MESSAGE = '.error-message, .alert-danger, [role="alert"]'
 
     def __init__(self, page: Page):
@@ -36,9 +36,6 @@ class LoginPage(BasePage):
         # Fill in credentials
         self.fill_input(self.EMAIL_INPUT, email)
         self.fill_input(self.PASSWORD_INPUT, password)
-
-        get_button = self.page.get_by_role("button").all_text_contents()
-        logger.debug(f"FINDING BUTTON: {get_button}")
 
         # Click Login button
         self.click_element(self.LOGIN_BUTTON)

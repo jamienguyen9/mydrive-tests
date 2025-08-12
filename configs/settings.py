@@ -40,6 +40,10 @@ class TestConfig:
         self.reports_dir = Path('reports')
         self.logs_dir = self.reports_dir / 'logs'
 
+        # Database Configuration
+        self.mongodb_url = os.getenv('MONGODB_URL', 'mongodb://localhost:27017/mydrive_test')
+        self.db_type = os.getenv('DB_TYPE', 'fs')
+
     def get_page_goto_options(self) -> Dict[str, Any]:
         """
         Get default page navigation options

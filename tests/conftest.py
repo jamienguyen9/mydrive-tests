@@ -6,10 +6,13 @@ sys.path.insert(0,str(project_root))
 
 import pytest
 import logging
+from datetime import datetime
 from typing import Generator, Dict, Any
 from configs.settings import config
 from playwright.sync_api import Playwright, Page, Browser, BrowserContext, sync_playwright
+from pages.login_page import LoginPage
 from utils.logger import setup_logger
+from utils.db_helper import DatabaseHelper
 
 logger = setup_logger(__name__)
 
@@ -95,3 +98,35 @@ def test_setup_teardown(request):
         pytest._test_failed = False
 
     logger.info(f"Finished test: {test_name}")
+
+@pytest.fixture(scope="session")
+def db_helper() -> DatabaseHelper:
+    """Create a database helper instance"""
+    logger.info(f"Connecting to MongoDB with this url... {config.mongodb_url}")
+    return DatabaseHelper(config.mongodb_url)
+
+@pytest.fixture(scope="function")
+def test_user(db_helper: DatabaseHelper) -> Dict[str, Any]:
+    """Create a test user for the test"""
+    user = {
+        'email': f'test_{datetime.now().strftime("%Y%m%d%H%M%S")}@example.com',
+        'password': 'TestPassword123!',
+        'first_name': 'Test',
+        'last_name': 'User'
+    }
+    db_helper.create_test_user(user)
+    logger.info("Test user created")
+
+    yield user
+
+    db_helper.delete_test_user(user['email'])
+
+@pytest.fixture(scope="function")
+def authenticated_page(page: Page, test_user: Dict[str, Any]) -> Page:
+    """Provide a page with an authenticated user"""
+    login_page = LoginPage(page)
+    login_page.navigate_to()
+    login_page.login(test_user['email'], test_user['password'])
+
+    assert login_page.is_logged_in(), "Failed to authenticate test user"
+    return page

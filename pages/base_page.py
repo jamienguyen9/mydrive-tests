@@ -111,3 +111,7 @@ class BasePage:
         """Wait for network to be idle"""
         timeout = timeout or self.timeout
         self.page.wait_for_load_state('networkidle', timeout=timeout)
+
+    def get_current_url(self) -> str:
+        """ Get the url of the current page you're on"""
+        return self.page.url
