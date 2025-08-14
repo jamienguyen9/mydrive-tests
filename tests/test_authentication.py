@@ -15,27 +15,13 @@ class TestAuthentication:
     """Test suite for authentication features"""
 
     @pytest.fixture(scope="class", autouse=True)
-    def setup_test_users(self, db_helper):
-        """ Sets up test users int he database before running tests"""
-        logger.info("Setting up test users in the database")
-        created_users = []
-        for user_data in test_data.VALID_USERS:
-            try:
-                db_helper.create_test_user(user_data)
-                created_users.append[user_data['email']]
-                logger.info(f"Created test user: {user_data['email']}")
-            except Exception as e:
-                logger.warning(f"Could not create user {user_data['email']}: {e}")
+    def setup_test_users(self):
+
+        # TODO: Manually register through registration page since manually adding it to database didn't work as I thought it did
 
         yield
 
-        logger.info("Cleaning up test users")
-        for email in created_users:
-            try:
-                db_helper.delete_test_user(email)
-                logger.info(f"Deleted test user: {email}")
-            except Exception as e:
-                logger.warning(f"Could not delete user {email}: {e}")
+        # TODO: cleaup test users
 
     @pytest.mark.smoke
     @pytest.mark.critical
@@ -55,6 +41,7 @@ class TestAuthentication:
         # Use test data for valid user
         user = test_data.VALID_USERS[0]
         login_page.login(user['email'], user['password'])
+
 
         # Verify successful login
         assert login_page.is_logged_in(), "User should be logged in"
