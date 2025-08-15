@@ -51,15 +51,5 @@ class LoginPage(BasePage):
         logger.info(f"Checking if user is logged in...")
         self.page.wait_for_url("**/home")
         current_url = self.get_current_url()
-        logger.info(f"URL is now - {self.page.url} - indicating that login was successful")
+        logger.debug(f"URL is now - {self.get_current_url()}")
         return '/home' in current_url
-
-    def get_error_message(self) -> str:
-        """
-        Get error message if login failed
-
-        :returns: Error message text
-        """
-        if self.is_element_visible(self.ERROR_MESSAGE):
-            return self.get_text(self.ERROR_MESSAGE)
-        return ""
