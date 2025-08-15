@@ -48,9 +48,10 @@ class LoginPage(BasePage):
 
         :returns: true if logged in, false otherise
         """
+        logger.info(f"Checking if user is logged in...")
         self.page.wait_for_url("**/home")
         current_url = self.get_current_url()
-        logger.info(f"URL is now: {self.page.url}")
+        logger.info(f"URL is now - {self.page.url} - indicating that login was successful")
         return '/home' in current_url
 
     def get_error_message(self) -> str:

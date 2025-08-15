@@ -102,15 +102,5 @@ def test_setup_teardown(request):
 @pytest.fixture(scope="session")
 def db_helper() -> DatabaseHelper:
     """Create a database helper instance"""
-    logger.info(f"Connecting to MongoDB with this url... {config.mongodb_url}")
+    logger.info(f"Connecting to MongoDB with url: {config.mongodb_url}")
     return DatabaseHelper(config.mongodb_url)
-
-@pytest.fixture(scope="function")
-def authenticated_page(page: Page, test_user: Dict[str, Any]) -> Page:
-    """Provide a page with an authenticated user"""
-    login_page = LoginPage(page)
-    login_page.navigate_to()
-    login_page.login(test_user['email'], test_user['password'])
-
-    assert login_page.is_logged_in(), "Failed to authenticate test user"
-    return page

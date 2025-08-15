@@ -14,7 +14,6 @@ class RegisterPage(BasePage):
     """Page object for the registration page"""
 
     # Locators
-    GO_TO_CREATE = ''
     EMAIL_INPUT = 'input[type="text"], input[placeholder="Email address"]'
     CREATE_BUTTON = 'input[type="submit"], input[value="Create"]'
 

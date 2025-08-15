@@ -36,7 +36,6 @@ class TestAuthentication:
         # Delete test users after test
         try:
             db_helper.delete_test_user(test_user['email'])
-            logger.info(f"Deleted test user: {test_user['email']}")
         except Exception as e:
             logger.warning(f"Could not delete user {test_user['email']}: {e}")
 
@@ -61,3 +60,4 @@ class TestAuthentication:
 
         # Verify successful login
         assert login_page.is_logged_in(), "User should be logged in"
+        logger.info("Login successful.")
