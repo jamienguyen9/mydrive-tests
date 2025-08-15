@@ -41,7 +41,7 @@ class TestAuthentication:
 
     @pytest.mark.smoke
     @pytest.mark.critical
-    def test_successful_login(self, page: Page):
+    def test_successful_login(self, page: Page) -> None:
         """
         Test successful login with valid credentials.
 
@@ -49,7 +49,7 @@ class TestAuthentication:
         1. Navigate to login page
         2. Enter valid credentials
         3. Click login button
-        4. Verify redirect to dashboard after login has been successful
+        4. Verify redirect to home page after login has been successful
         """
         login_page = LoginPage(page)
         login_page.navigate_to()
@@ -61,3 +61,17 @@ class TestAuthentication:
         # Verify successful login
         assert login_page.is_logged_in(), "User should be logged in"
         logger.info("Login successful.")
+
+    @pytest.mark.smoke
+    def test_login_with_invalid_email(self, page: Page) -> None:
+        """
+        Test login with an invalid email and verify login was
+        unsuccessful
+
+        Steps:
+        1. Navigate to login page
+        2. Enter invalid credentials
+        3. Click login button
+        4. Verify we are still in login page with an error message
+        """
+        login_page = LoginPage(page)
