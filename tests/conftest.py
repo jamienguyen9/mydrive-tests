@@ -106,22 +106,6 @@ def db_helper() -> DatabaseHelper:
     return DatabaseHelper(config.mongodb_url)
 
 @pytest.fixture(scope="function")
-def test_user(db_helper: DatabaseHelper) -> Dict[str, Any]:
-    """Create a test user for the test"""
-    user = {
-        'email': f'test_{datetime.now().strftime("%Y%m%d%H%M%S")}@example.com',
-        'password': 'TestPassword123!',
-        'first_name': 'Test',
-        'last_name': 'User'
-    }
-    db_helper.create_test_user(user)
-    logger.info("Test user created")
-
-    yield user
-
-    db_helper.delete_test_user(user['email'])
-
-@pytest.fixture(scope="function")
 def authenticated_page(page: Page, test_user: Dict[str, Any]) -> Page:
     """Provide a page with an authenticated user"""
     login_page = LoginPage(page)

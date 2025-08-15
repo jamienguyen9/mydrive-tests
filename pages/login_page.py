@@ -21,7 +21,6 @@ class LoginPage(BasePage):
 
     def __init__(self, page: Page):
         super().__init__(page)
-        self.page_url = f"{config.base_url}/login"
 
     def login(self, email: str, password: str) -> None:
         """
@@ -51,7 +50,7 @@ class LoginPage(BasePage):
         """
         self.page.wait_for_url("**/home")
         current_url = self.get_current_url()
-        logger.info(f"URL is now: {self.page.url()}")
+        logger.info(f"URL is now: {self.page.url}")
         return '/home' in current_url
 
     def get_error_message(self) -> str:

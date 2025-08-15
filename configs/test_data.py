@@ -19,19 +19,7 @@ class TestData:
             'password': 'JohnDoe123!',
             'first_name': 'John',
             'last_name': 'Doe'
-        },
-        {
-            'email': 'jane.smith@example.com',
-            'password': 'JaneSmith456!',
-            'first_name': 'Jane',
-            'last_name': 'Smith'
-        },
-        {
-            'email': 'test.automation@example.com',
-            'password': 'TestAuto789!',
-            'first_name': 'Test',
-            'last_name': 'Auto'
-        },
+        }
     ]
 
 test_data = TestData()
