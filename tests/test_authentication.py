@@ -85,6 +85,9 @@ class TestAuthentication:
         login_page.login('randomuser.lols@email.com', user['password'])
 
         # Verify login was not successful
+        expect(login_page.page.get_by_text("Incorrect email or password")).to_be_visible()
+        assert '/home' not in login_page.get_current_url()
+        logger.info("Login not successful.")
 
     @pytest.mark.smoke
     def test_login_with_invalid_password(self, page: Page) -> None:
@@ -106,6 +109,10 @@ class TestAuthentication:
         login_page.login(user['email'], 'randompasswordhaha')
 
         # Verify login was not successful
+        expect(login_page.page.get_by_text("Incorrect email or password")).to_be_visible()
+        assert '/home' not in login_page.get_current_url()
+        logger.info("Login not successful.")
+
         
     @pytest.mark.smoke
     def test_login_with_invalid_credentials(self, page: Page) -> None:
@@ -126,4 +133,8 @@ class TestAuthentication:
         login_page.login('randomuser.lols@email.com', 'java smells')
 
         # Verify login was not successful
+        expect(login_page.page.get_by_text("Incorrect email or password")).to_be_visible()
+        assert '/home' not in login_page.get_current_url()
+        logger.info("Login not successful.")
+
         
