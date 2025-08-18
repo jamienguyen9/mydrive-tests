@@ -1,0 +1,34 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mydrive-test-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: mydrive_test
+    volumes:
+      - mongo-test-data:/data/db
+    networks:
+      - mydrive-test-network
+
+  mydrive:
+    image: kylehoell/mydrive:latest
+    container_name: mydrive-test-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./test_data:/data
+      - ./temp:/temp
+    depends_on:
+      - mongodb
+    networks:
+      - mydrive-test-network
+
+networks:
+  mydrive-test-network:
+    driver: bridge
+
+volumes:
+  mongo-test-data:
