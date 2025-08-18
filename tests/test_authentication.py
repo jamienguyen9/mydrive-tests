@@ -62,6 +62,9 @@ class TestAuthentication:
         assert login_page.is_logged_in(), "User should be logged in"
         logger.info("Login successful.")
 
+        # Make sure the user is logged out in preparation for the next test
+        login_page.logout()
+
     @pytest.mark.smoke
     def test_login_with_invalid_email(self, page: Page) -> None:
         """
@@ -75,3 +78,52 @@ class TestAuthentication:
         4. Verify we are still in login page with an error message
         """
         login_page = LoginPage(page)
+        login_page.navigate_to()
+
+        # Attempt to log in with invalid user
+        user = test_data.VALID_USERS[0]
+        login_page.login('randomuser.lols@email.com', user['password'])
+
+        # Verify login was not successful
+
+    @pytest.mark.smoke
+    def test_login_with_invalid_password(self, page: Page) -> None:
+        """
+        Test login with an invalid password and verify login was
+        unsuccessful
+
+        Steps:
+        1. Navigate to login page
+        2. Enter invalid credentials
+        3. Click login button
+        4. Verify we are still in login page with an error message
+        """
+        login_page = LoginPage(page)
+        login_page.navigate_to()
+
+        # Attempt to log in with invalid user
+        user = test_data.VALID_USERS[0]
+        login_page.login(user['email'], 'randompasswordhaha')
+
+        # Verify login was not successful
+        
+    @pytest.mark.smoke
+    def test_login_with_invalid_credentials(self, page: Page) -> None:
+        """
+        Test login with an invalid credentials and verify login was
+        unsuccessful
+
+        Steps:
+        1. Navigate to login page
+        2. Enter invalid credentials
+        3. Click login button
+        4. Verify we are still in login page with an error message
+        """
+        login_page = LoginPage(page)
+        login_page.navigate_to()
+
+        # Attempt to log in with invalid user
+        login_page.login('randomuser.lols@email.com', 'java smells')
+
+        # Verify login was not successful
+        

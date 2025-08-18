@@ -7,8 +7,6 @@ from pymongo import MongoClient
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 from urllib.parse import urlparse
-import hashlib
-import bcrypt
 import logging
 
 logger = logging.getLogger(__name__)
@@ -94,4 +92,4 @@ class DatabaseHelper:
         for user in test_users:
             self.delete_test_user(user['email'])
 
-        logger.info("Cleaned up all tet data")
+        logger.info("Cleaned up all test data")

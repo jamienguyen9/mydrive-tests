@@ -53,3 +53,11 @@ class LoginPage(BasePage):
         current_url = self.get_current_url()
         logger.debug(f"URL is now - {self.get_current_url()}")
         return '/home' in current_url
+
+    def logout(self) -> None:
+        """
+        Log out of the page after registration
+        """
+        self.page.locator("#header a").nth(1).click()
+        self.page.get_by_role("button", name="Logout", exact=True).click()
+        self.page.get_by_role("button", name="Yes, logout").click()
