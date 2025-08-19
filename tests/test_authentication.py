@@ -137,4 +137,34 @@ class TestAuthentication:
         assert '/home' not in login_page.get_current_url()
         logger.info("Login not successful.")
 
+    @pytest.mark.smoke
+    def test_registration_and_logout(self, page: Page) -> None:
+        """
+        Test user registration flow
+
+        Steps:
+        1. Navigate to login page
+        2. Register an account using valid credentials
+        3. Click register button which will navigate to home page
+        4. Verify page navigates to user home page
+        5. Logout of user account
+        6. Verify we are back to user login page
+        """
+        register_page = RegisterPage(page)
+        register_page.navigate_to()
+
+        test_user = {
+            "email": "testuser123@email.com",
+            "password": testpassword123
+        }
         
+        register_page.register(test_user["email"], test_user["password"])
+
+        assert '/home' in register_page.get_current_url()
+        logger.info("Verified user has logged in after successful registration")
+
+        register_page.logout_after_register()
+
+        assert '/home' not in register_page.get_current_url()
+
+    #TODO: Attempt to register with a non-email 

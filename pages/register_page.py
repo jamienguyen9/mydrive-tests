@@ -46,3 +46,5 @@ class RegisterPage(BasePage):
         self.page.locator("#header a").nth(1).click()
         self.page.get_by_role("button", name="Logout", exact=True).click()
         self.page.get_by_role("button", name="Yes, logout").click()
+        
+        self.wait_for_network_idle()
