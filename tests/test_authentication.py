@@ -115,7 +115,6 @@ class TestAuthentication:
         assert '/home' not in login_page.get_current_url()
         logger.info("Verified login not successful.")
 
-        
     @pytest.mark.smoke
     def test_login_with_invalid_credentials(self, page: Page) -> None:
         """
@@ -207,8 +206,6 @@ class TestAuthentication:
 
         expect(register_page.page.get_by_text("Password must be at least 6")).to_be_visible()
         logger.info("Verified user registration was not successful due to short password")
-
-
 
     @pytest.mark.smoke
     def test_register_with_unmatching_passwords(self, page: Page) -> None:

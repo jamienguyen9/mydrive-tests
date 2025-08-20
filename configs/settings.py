@@ -30,12 +30,6 @@ class TestConfig:
         self.default_timeout = int(os.getenv('DEFAULT_TIMEOUT', '30000'))
         self.screenshot_on_failure = os.getenv('SCREENSHOT_ON_FAILURE', 'true').lower == 'true'
 
-        # Test User Credentials
-        self.test_user_email = os.getenv('TEST_USER_EMAIL', 'test.user@example.com')
-        self.test_user_password = os.getenv('TEST_USER_PASSWORD', 'TestPassword123!')
-        self.test_admin_email = os.getenv('TEST_ADMIN_EMAIL', 'admin@example.com')
-        self.test_admin_password = os.getenv('TEST_ADMIN_PASSWORD', "AdminPassword123!")
-
         # End Test Paths
         self.reports_dir = Path('reports')
         self.logs_dir = self.reports_dir / 'logs'
