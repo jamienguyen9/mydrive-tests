@@ -16,9 +16,11 @@ class TestData:
     VALID_USERS = [
         {
             'email': 'john.doe@example.com',
-            'password': 'JohnDoe123!',
-            'first_name': 'John',
-            'last_name': 'Doe'
+            'password': 'JohnDoe123!'
+        },
+        {
+            'email': 'testuser1234@email.com',
+            'password': 'testpassword123'
         }
     ]
 

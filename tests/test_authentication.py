@@ -34,8 +34,10 @@ class TestAuthentication:
         yield
 
         # Delete test users after test
+        logger.info("Deleting users for test teardown...")
         try:
-            db_helper.delete_test_user(test_user['email'])
+            for user in test_data.VALID_USERS:
+                db_helper.delete_test_user(user['email'])
         except Exception as e:
             logger.warning(f"Could not delete user {test_user['email']}: {e}")
 
@@ -60,7 +62,7 @@ class TestAuthentication:
 
         # Verify successful login
         assert login_page.is_logged_in(), "User should be logged in"
-        logger.info("Login successful.")
+        logger.info("Verified login was successful.")
 
         # Make sure the user is logged out in preparation for the next test
         login_page.logout()
@@ -87,7 +89,7 @@ class TestAuthentication:
         # Verify login was not successful
         expect(login_page.page.get_by_text("Incorrect email or password")).to_be_visible()
         assert '/home' not in login_page.get_current_url()
-        logger.info("Login not successful.")
+        logger.info("Verified login not successful.")
 
     @pytest.mark.smoke
     def test_login_with_invalid_password(self, page: Page) -> None:
@@ -111,7 +113,7 @@ class TestAuthentication:
         # Verify login was not successful
         expect(login_page.page.get_by_text("Incorrect email or password")).to_be_visible()
         assert '/home' not in login_page.get_current_url()
-        logger.info("Login not successful.")
+        logger.info("Verified login not successful.")
 
         
     @pytest.mark.smoke
@@ -135,7 +137,7 @@ class TestAuthentication:
         # Verify login was not successful
         expect(login_page.page.get_by_text("Incorrect email or password")).to_be_visible()
         assert '/home' not in login_page.get_current_url()
-        logger.info("Login not successful.")
+        logger.info("Verified login was not successful.")
 
     @pytest.mark.smoke
     def test_registration_and_logout(self, page: Page) -> None:
@@ -152,16 +154,80 @@ class TestAuthentication:
         register_page = RegisterPage(page)
         register_page.navigate_to()
 
-        test_user = {
-            "email": "testuser123@email.com",
-            "password": "testpassword123"
-        }
+        test_user = test_data.VALID_USERS[1]
         register_page.register(test_user["email"], test_user["password"])
-
-        assert '/home' in register_page.get_current_url()
+        
+        expect(register_page.page.get_by_role("heading", name="Quick Access")).to_be_visible()
         logger.info("Verified user has logged in after successful registration")
 
         register_page.logout_after_register()
-        assert '/home' not in register_page.get_current_url()
+        expect(register_page.page.get_by_text("Login to your account")).to_be_visible()
+        logger.info("Verified logout was successful")
 
-    #TODO: Attempt to register with a non-email 
+    @pytest.mark.smoke
+    def test_register_with_non_email(self, page: Page) -> None:
+        """
+        Test user registration with non-email
+
+        Steps:
+        1. Navigate to login page
+        2. Attempt to register an account using a non-email
+        3. Verify an error occurs saying that the email is invalid
+        """
+        register_page = RegisterPage(page)
+        register_page.navigate_to()
+
+        test_user = {
+            "email": "jimmyscroissants",
+            "password": "croissants"
+        }
+        register_page.register(test_user["email"], test_user["password"], click_button=False)
+
+        expect(register_page.page.get_by_text("Email is invalid")).to_be_visible()
+        logger.info("Verified user registration was not successful due to invalid email")
+
+    @pytest.mark.smoke
+    def test_register_with_short_password(self, page: Page) -> None:
+        """
+        Test user registration with short passwords
+
+        Steps:
+        1. Navigate to login page
+        2. Attempt to register an account with a really short password
+        3. Verify an error occurs saying that the password must be at least 6 characters
+        """
+        register_page = RegisterPage(page)
+        register_page.navigate_to()
+
+        test_user = {
+            "email": "carlwheezer@email.com",
+            "password": "hah"
+        }
+        register_page.register(test_user["email"], test_user["password"], click_button=False)
+
+        expect(register_page.page.get_by_text("Password must be at least 6")).to_be_visible()
+        logger.info("Verified user registration was not successful due to short password")
+
+
+
+    @pytest.mark.smoke
+    def test_register_with_unmatching_passwords(self, page: Page) -> None:
+        """
+        Test user registration with unmatching passwords
+
+        Steps:
+        1. Navigate to login page
+        2. Attempt to register an account with a really short password
+        3. Verify an error occurs saying that the passwords do not match
+        """
+        register_page = RegisterPage(page)
+        register_page.navigate_to()
+
+        test_user = {
+            "email": "carlwheezer@email.com",
+            "password": "jimmysmom"
+        }
+        register_page.register(test_user["email"], test_user["password"], "hahaha", click_button=False)
+
+        expect(register_page.page.get_by_text("Passwords do not match")).to_be_visible()
+        logger.info("Verified user registration was not successful due to unmatching passwords")

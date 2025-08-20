@@ -20,12 +20,15 @@ class RegisterPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
 
-    def register(self, email: str, password: str) -> None:
+    def register(self, email: str, password: str, unmatching: str = "", click_button: bool = True) -> None:
         """
         Registers a new user account
 
         :param email: User email
         :param password: User password
+        :param unmatching: If not empty, we fill the confirm password input
+        box with an unmatching password
+        :param click_button: Toggle whether to click the register button
         """
         self.page.get_by_text("Create Account").click()
 
@@ -33,11 +36,15 @@ class RegisterPage(BasePage):
 
         self.fill_input(self.EMAIL_INPUT, email)
         self.page.get_by_role("textbox", name="Password", exact=True).fill(password)
-        self.page.get_by_role("textbox", name="Verify Password").fill(password)
+        
+        if unmatching:
+            self.page.get_by_role("textbox", name="Verify Password").fill(unmatching)
+        else:
+            self.page.get_by_role("textbox", name="Verify Password").fill(password)
 
-        self.click_element(self.CREATE_BUTTON)
-
-        self.wait_for_network_idle()
+        if click_button:
+            self.click_element(self.CREATE_BUTTON)
+            self.wait_for_network_idle()
 
     def logout_after_register(self) -> None:
         """
