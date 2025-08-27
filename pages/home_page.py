@@ -1,6 +1,6 @@
 """
 This module contains the page object for the user home page.
-Handles image upload and logout stuff idk yet
+Handles file handling, folder management and logout 
 """
 
 from playwright.sync_api import Page
@@ -22,3 +22,16 @@ class HomePage(BasePage):
         self.page.get_by_role("button", name="Logout", exact=True).click()
         self.page.get_by_role("button", name="Yes, logout").click()
         logger.info("Logged out")
+
+    def upload_file(self, file_path: str) -> None:
+        """
+        Navigate to the upload button and upload a file based 
+        on the given file path
+
+        :param file_path: file path of the file that will be uplaoded
+        """
+        logger.info(f"Attempting to upload file {file_path}")
+        self.page.locator("a").filter(has_text="ADD NEW").click()
+        self.page.locator("a").filter(has_text="Upload Files").click()
+        self.page.locator("body").set_input_files(file)
+    

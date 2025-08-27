@@ -10,9 +10,10 @@ from datetime import datetime
 from typing import Generator, Dict, Any
 from configs.settings import config
 from playwright.sync_api import Playwright, Page, Browser, BrowserContext, sync_playwright
-from pages.login_page import LoginPage
+from pages.register_page import RegisterPage
 from utils.logger import setup_logger
 from utils.db_helper import DatabaseHelper
+from configs.test_data import test_data
 
 logger = setup_logger(__name__)
 
@@ -36,6 +37,7 @@ def browser(playwright_instance: Playwright) -> Generator[Browser, None, None]:
     yield browser
     
     browser.close()
+
 
 @pytest.fixture(scope="function")
 def context(browser: Browser) -> Generator[BrowserContext, None, None]:
@@ -67,6 +69,7 @@ def context(browser: Browser) -> Generator[BrowserContext, None, None]:
     # context.tracing.stop()
     context.close()
 
+
 @pytest.fixture(scope="function")
 def page(context: BrowserContext) -> Generator[Page, None, None]:
     """
@@ -81,7 +84,7 @@ def page(context: BrowserContext) -> Generator[Page, None, None]:
     # TODO Take screenshot of page on failure
 
     page.close()
-    
+
 
 @pytest.fixture(scope="function", autouse=True)
 def test_setup_teardown(request):
@@ -99,8 +102,35 @@ def test_setup_teardown(request):
 
     logger.info(f"Finished test: {test_name}")
 
+
 @pytest.fixture(scope="session")
 def db_helper() -> DatabaseHelper:
     """Create a database helper instance"""
     logger.info(f"Connecting to MongoDB with url: {config.mongodb_url}")
     return DatabaseHelper(config.mongodb_url)
+
+
+@pytest.fixture(scope="module", autouse=True)
+def setup_test_users(browser: Browser, db_helper: DatabaseHelper):
+    context = browser.new_context()
+    page = context.new_page()
+
+    register_page = RegisterPage(page)
+    register_page.navigate_to()
+    
+    test_user = test_data.VALID_USERS[0]
+    register_page.register(test_user['email'], test_user['password'])
+    register_page.logout_after_register()
+
+    logger.info("Register successful")
+    context.close()
+
+    yield
+
+    # Delete test users after test
+    logger.info("Deleting users for test teardown...")
+    try:
+        for user in test_data.VALID_USERS:
+            db_helper.delete_test_user(user['email'])
+    except Exception as e:
+        logger.warning(f"Could not delete user {test_user['email']}: {e}")

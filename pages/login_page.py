@@ -14,10 +14,9 @@ class LoginPage(BasePage):
     """ Page object for the myDrive login page"""
 
     # Locators
-    EMAIL_INPUT = 'input[type="text"], input[name="Email address"], #email'
-    PASSWORD_INPUT = 'input[type="password"], input[name="Password"], #password'
+    EMAIL_INPUT = 'input[type="text"], input[name="Email address"]'
+    PASSWORD_INPUT = 'input[type="password"], input[name="Password"]'
     LOGIN_BUTTON = 'input[type="submit"], input[value="Login"]'
-    ERROR_MESSAGE = '.error-message, .alert-danger, [role="alert"]'
 
     def __init__(self, page: Page):
         super().__init__(page)

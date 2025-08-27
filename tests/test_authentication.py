@@ -1,6 +1,6 @@
 """
 This module contains tests for authentication functioanlity including
-login, logout, registration, and password reset.
+login, logout, and registration.
 """
 
 import pytest
@@ -15,31 +15,6 @@ logger = logging.getLogger(__name__)
 
 class TestAuthentication:
     """Test suite for authentication features"""
-
-    @pytest.fixture(scope="class", autouse=True)
-    def setup_test_users(self, browser: Browser, db_helper: DatabaseHelper):
-        context = browser.new_context()
-        page = context.new_page()
-
-        register_page = RegisterPage(page)
-        register_page.navigate_to()
-        
-        test_user = test_data.VALID_USERS[0]
-        register_page.register(test_user['email'], test_user['password'])
-        register_page.logout_after_register()
-
-        logger.info("Register successful")
-        context.close()
-
-        yield
-
-        # Delete test users after test
-        logger.info("Deleting users for test teardown...")
-        try:
-            for user in test_data.VALID_USERS:
-                db_helper.delete_test_user(user['email'])
-        except Exception as e:
-            logger.warning(f"Could not delete user {test_user['email']}: {e}")
 
     @pytest.mark.smoke
     @pytest.mark.critical
@@ -139,6 +114,7 @@ class TestAuthentication:
         logger.info("Verified login was not successful.")
 
     @pytest.mark.smoke
+    @pytest.mark.regression
     def test_registration_and_logout(self, page: Page) -> None:
         """
         Test user registration flow
